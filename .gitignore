@@ -1,0 +1,5 @@
+# GitLab Omnibus runtime data, logs, databases, sockets, and secrets
+/gitlab/
+
+# GitLab Runner registration state and authentication token
+/gitlab-runner/

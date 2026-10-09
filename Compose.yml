@@ -1,0 +1,30 @@
+version: "1.0"
+services:
+  gitlab-service:
+    image: gitlab/gitlab-ce
+    ports:
+      - "8000:80"
+    container_name: gitlab-container
+    hostname: gitlab-service
+    restart: always
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        gitlab_rails['initial_root_password'] = 'Playerom@12345678'
+        puma['worker_processes'] = 0
+        external_url = 'http://gitlab-service'
+    volumes:
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/data:/var/opt/gitlab
+      
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner-cnt
+    hostname: runner-host
+    depends_on:
+      - gitlab-service
+    restart: always
+    volumes:
+      - ./gitlab-runner/config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
